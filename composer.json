@@ -1,0 +1,26 @@
+{
+    "name": "amol/reactive_ci4",
+    "description": "Activity logger for Codeigniter 4",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Amol\\ReactiveCi4\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "amol",
+            "email": "amlo1232001@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require-dev": {
+        "codeigniter4/devkit": "dev-develop"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    }
+}
