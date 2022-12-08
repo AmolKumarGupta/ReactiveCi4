@@ -1,5 +1,5 @@
 {
-    "name": "amol/reactive_ci4",
+    "name": "amol/reactiveci4",
     "description": "Activity logger for Codeigniter 4",
     "type": "library",
     "license": "MIT",
@@ -16,7 +16,8 @@
     ],
     "minimum-stability": "dev",
     "require-dev": {
-        "codeigniter4/devkit": "dev-develop"
+        "codeigniter4/devkit": "dev-develop",
+        "codeigniter4/framework": "^4.2.3"
     },
     "config": {
         "allow-plugins": {
