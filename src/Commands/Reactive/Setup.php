@@ -22,20 +22,100 @@ class Setup extends BaseCommand
     protected $group = "Reactive";
     protected $name = "reactive:setup";
     protected $description = "Initial setup for reactive, activity logger";
-    protected $arguments = [
-        "migration file" => "CreateMigrationFile"
-    ];
+    protected $arguments = [];
     protected $options = [];
 
-    protected $sourcePath;
-    protected $distPath = APPPATH;
+    protected $src;
+    protected $dist = APPPATH;
 
     public function run(array $params): void
     {
-        $this->sourcePath = __DIR__ ."/../";
-        // $config = config("Reactive");
-        CLI::write(" setup is running");
-        CLI::write( APPPATH );
+        $this->src = __DIR__ ."/../../";
+
+        $this->makeConfig();
+
+        $this->makeModel();
+
+        $this->migrate();
+    }
+
+    private function makeConfig(): void
+    {
+        $file     = 'Config/Reactive.php';
+        $replaces = [
+            'namespace Amol\ReactiveCi4\Config'  => 'namespace Config'
+        ];
+
+        $this->copy($file, $replaces);
+    }
+
+    private function makeModel(): void
+    {
+        $file     = 'Models/Activity.php';
+
+        $replaces = [
+            'namespace Amol\ReactiveCi4\Models'  => 'namespace App\Models'
+        ];
+
+        $this->copy($file, $replaces);
+    }
+
+    protected function copy(string $file, array $replaces): void
+    {
+        $path = "{$this->src}/{$file}";
+
+        $data = file_get_contents($path);
+
+        $data = $this->replace($data, $replaces);
+
+        $this->writeFile($file, $data);
+    }
+
+    public function replace(string $content, array $replaces): string
+    {
+        return strtr($content, $replaces);
+    }
+
+    protected function writeFile(string $file, string $content): void
+    {
+        $path      = $this->dist . $file;
+        $cleanPath = clean_path($path);
+
+        $directory = dirname($path);
+
+        if (! is_dir($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        if (file_exists($path)) {
+            $overwrite = (bool) CLI::getOption('f');
+
+            if (
+                ! $overwrite
+                && CLI::prompt("  File '{$cleanPath}' already exists in destination. Overwrite?", ['n', 'y']) === 'n'
+            ) {
+                CLI::error("  Skipped {$cleanPath}.");
+
+                return;
+            }
+        }
+
+        if (write_file($path, $content)) {
+            CLI::write(CLI::color('  Created: ', 'green') . $cleanPath);
+        } else {
+            CLI::error("  Error creating {$cleanPath}.");
+        }
+    }
+
+    private function migrate(): void
+    {
+        $answer = CLI::prompt('  Run `spark migrate --all` now?', ['y', 'n']);
+        if ($answer === 'n') {
+            return;
+        }
+
+        $command = new Migrate(Services::logger(), Services::commands());
+        $command->run(['all' => null]);
     }
 
 }
