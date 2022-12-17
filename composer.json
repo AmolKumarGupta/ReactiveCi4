@@ -3,6 +3,13 @@
     "description": "Activity logger for Codeigniter 4",
     "type": "library",
     "license": "MIT",
+    "keywords": [
+        "codeigniter",
+        "codeigniter4",
+        "activity",
+        "log",
+        "reactive"
+    ],
     "autoload": {
         "psr-4": {
             "Amol\\ReactiveCi4\\": "src/"
@@ -14,6 +21,7 @@
             "email": "amlo1232001@gmail.com"
         }
     ],
+    "homepage": "https://github.com/AmolKumarGupta/ReactiveCi4/",
     "minimum-stability": "dev",
     "require-dev": {
         "codeigniter4/devkit": "dev-develop",
